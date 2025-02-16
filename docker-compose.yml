@@ -1,0 +1,35 @@
+﻿version: '3.9'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=AvitoTestTaskDB;Username=postgres;Password=20110409
+    depends_on:
+      - db
+    networks:
+      - backend
+
+  db:
+    image: postgres:13
+    environment:
+      - POSTGRES_DB=AvitoTestTaskDB
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=20110409
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend
+
+networks:
+  backend:
+    name: avito_backend_network
+    driver: bridge
+
+volumes:
+  postgres_data:
